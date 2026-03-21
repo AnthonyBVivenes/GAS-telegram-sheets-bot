@@ -1,0 +1,2 @@
+# CRUD GAS bot template
+

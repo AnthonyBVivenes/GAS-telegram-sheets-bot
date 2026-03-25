@@ -35,3 +35,6 @@ Este repositorio es una solución "low-code" para emprendedores y desarrolladore
 | **Tiempo de Ejecución** | 6 min / ejecución / 6 h por día|
 
 ---
+
+---
+*Desarrollado con <3 para la comunidad de emprendedores tecnológicos.*

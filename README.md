@@ -35,6 +35,19 @@ Este repositorio es una solución "low-code" para emprendedores y desarrolladore
 | **Tiempo de Ejecución** | 6 min / ejecución / 6 h por día|
 
 ---
+## Contribuciones
+
+¿Encontraste un bug? ¿Quieres mejorar el código?
+
+- Haz fork del proyecto
+
+- Crea tu rama (git checkout -b feature/nueva-funcion) si quieres crear una nueva plantilla o una nueva función
+
+- Commit (git commit -m 'Agrega nueva función')
+
+- Push (git push origin feature/nueva-funcion)
+
+- Abre un Pull Request
 
 ---
 *Desarrollado con <3 para la comunidad de emprendedores tecnológicos.*

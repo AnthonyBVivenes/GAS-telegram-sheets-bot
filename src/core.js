@@ -151,3 +151,18 @@ function writeLog(ssId, type, description) {
 function isAdmin(ssId, chatId) {
   return findRowByValue(ssId, "admins", 1, chatId) !== -1;
 }
+
+// --- LINKER INIT ---
+
+/**
+ * Sets the webhook for the Telegram bot to point to this script's URL.
+ * @param {string} token - Bot Token.
+ * @param {string} url - The Web App URL from Google Apps Script deployment.
+ * @returns {GoogleAppsScript.URL_Fetch.HTTPResponse} The API response.
+ */
+function setBotWebhook(token, url) {
+  var payload = {
+    url: url
+  };
+  return postToTelegram(token, "setWebhook", payload);
+}

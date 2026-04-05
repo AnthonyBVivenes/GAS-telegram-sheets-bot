@@ -139,3 +139,12 @@ function writeLog(ssId, type, description) {
     console.error("Critical log failure: " + e.toString());
   }
 }
+
+// --- SECURITY UTILITIES ---
+
+/**
+ * Checks if a user is an administrator in the given sheet.
+ */
+function isAdmin(ssId, chatId) {
+  return findRowByValue(ssId, "admins", 1, chatId) !== -1;
+}

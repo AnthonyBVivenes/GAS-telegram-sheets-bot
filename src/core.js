@@ -1,7 +1,10 @@
 /**
  * GAS-telegram-sheets-bot - Core Engine
- * Copyright 2026 Anthony Vivenes
- * Licensed under the Apache License, Version 2.0
+ * @version 1.0.0
+ * @author Anthony B. Vivenes
+ * @license Apache 2.0
+ * @description Bot engine for Telegram integration with Google Sheets
+ * @see https://github.com/AnthonyBVivenes/GAS-telegram-sheets-bot
  */
 
 // --- NETWORK CONFIGURATION ---

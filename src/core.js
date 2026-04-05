@@ -131,6 +131,7 @@ function writeLog(ssId, type, description) {
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(["Date", "Type", "Description"]);
     }
+    //Puedes modificar según su zona horaria
     sheet.appendRow([new Intl.DateTimeFormat('es-VE', { 
       dateStyle: 'short', timeStyle: 'medium', timeZone: 'America/Caracas' 
     }).format(new Date()), type, description]);

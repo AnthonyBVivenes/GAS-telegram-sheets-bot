@@ -23,3 +23,21 @@ function postToTelegram(token, method, payload) {
   return UrlFetchApp.fetch(url, options);
 }
 
+// --- DATABASE FUNCTIONS (SHEETS) ---
+
+/**
+ * Finds a value in a specific column and returns the row index (1-based).
+ * @param {string} ssId - Google Sheets document ID
+ * @param {string} sheetName - Name of the sheet to search
+ * @param {number} columnIndex - Column index (0-based)
+ * @param {string|number} searchValue - Value to search for
+ * @returns {number} Row index (1-based) or -1 if not found
+ */
+function findRowByValue(ssId, sheetName, columnIndex, searchValue) {
+  var sheet = SpreadsheetApp.openById(ssId).getSheetByName(sheetName);
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][columnIndex] == searchValue) return i + 1;
+  }
+  return -1;
+}

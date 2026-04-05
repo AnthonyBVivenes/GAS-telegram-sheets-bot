@@ -41,3 +41,22 @@ function findRowByValue(ssId, sheetName, columnIndex, searchValue) {
   }
   return -1;
 }
+
+/**
+ * Appends a new row to a sheet after basic validation.
+ * @param {string} ssId - Google Sheets document ID
+ * @param {string} sheetName - Target sheet name
+ * @param {Array} dataArray - Array of values to insert
+ * @returns {boolean} True if successful, false otherwise
+ */
+function insertRow(ssId, sheetName, dataArray) {
+  if (!dataArray || dataArray.length === 0) return false;
+  try {
+    var sheet = SpreadsheetApp.openById(ssId).getSheetByName(sheetName);
+    sheet.appendRow(dataArray);
+    return true;
+  } catch (e) {
+    writeLog(ssId, "ERROR_INSERT", e.toString());
+    return false;
+  }
+}

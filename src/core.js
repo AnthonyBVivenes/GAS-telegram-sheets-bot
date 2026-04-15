@@ -117,40 +117,46 @@ function removeDuplicates(ssId, sheetName, columnIndex) {
 
 
 /**
- * Universal logging system.
- * @param {string} ssId - Google Sheets document ID
- * @param {string} type - Log type (e.g., "ERROR", "WARNING", "INFO")
- * @param {string} description - Detailed log message
- * @param {Object} [context] - Optional additional context (user, function, etc.)
- * @returns {boolean} True if log was written successfully
- * 
- * @example
- * writeLog(ssId, "ERROR", "Failed to send message", {userId: 12345, function: "sendMessage"});
+ * Standardized logging system.
+ * Appends system events or errors to the logs sheet.
+ * * @param {string} ssId - The Spreadsheet ID.
+ * @param {string} type - Log level (e.g., INFO, ERROR, UNAUTHORIZED).
+ * @param {string} description - Detailed message of the event.
  */
 function writeLog(ssId, type, description) {
   try {
-    var ss = SpreadsheetApp.openById(ssId);
-    var sheet = ss.getSheetByName("logs") || ss.insertSheet("logs");
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(["Date", "Type", "Description"]);
-    }
-    //Puedes modificar según su zona horaria
-    sheet.appendRow([new Intl.DateTimeFormat('es-VE', { 
-      dateStyle: 'short', timeStyle: 'medium', timeZone: 'America/Caracas' 
-    }).format(new Date()), type, description]);
+    const ss = SpreadsheetApp.openById(ssId);
+    const sheet = ss.getSheetByName(SHEET_LOGS);
+    
+    if (!sheet) return; // Silent fail if log sheet is missing to avoid execution loops
+
+    // Standard timestamp for technical audits
+    const timestamp = Utilities.formatDate(new Date(), "GMT-4", "yyyy-MM-dd HH:mm:ss");
+    
+    // Schema: [Timestamp, Type, Message]
+    sheet.appendRow([timestamp, type, description]);
   } catch (e) {
-    console.error("Critical log failure: " + e.toString());
+    console.error("Critical failure in writeLog: " + e.toString());
   }
 }
 
 // --- SECURITY UTILITIES ---
 
+
+
 /**
- * Checks if a user is an administrator in the given sheet.
+ * Checks if a user is an administrator.
+ * Based on DATABASE_SCHEMA: the "admins" sheet has "chat_id" at index 0 (Column A).
+ * * @param {string} ssId - Spreadsheet ID.
+ * @param {number|string} chatId - Telegram User ID.
+ * @returns {boolean}
  */
 function isAdmin(ssId, chatId) {
-  return findRowByValue(ssId, "admins", 1, chatId) !== -1;
+  return findRowByValue(ssId, "admins", 0, chatId) !== -1;
 }
+
+
+
 
 // --- LINKER INIT ---
 
@@ -166,3 +172,45 @@ function setBotWebhook(token, url) {
   };
   return postToTelegram(token, "setWebhook", payload);
 }
+
+
+/**
+ * Calculates the maximum ID in a column and returns maximum + 1.
+ * @returns {number} New AI ID.
+ */
+function generateAutoId(sheetName, columnIndex) {
+  try {
+
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName(sheetName);
+    
+    if (!sheet) return 1;
+
+    var lastRow = sheet.getLastRow();
+    if (lastRow <= 1) return 1;
+
+    
+    var ids = sheet.getRange(2, columnIndex + 1, lastRow - 1, 1).getValues();
+    
+    
+    var maxId = Math.max.apply(null, ids.map(function(row) { 
+      var val = parseInt(row[0]);
+      return isNaN(val) ? 0 : val; 
+    }));
+
+    return maxId + 1;
+  } catch (e) {
+    return 1;
+  }
+}
+
+/**
+* Formats a Date object to string DD/MM/YYYY HH:MM.
+ * @returns {string} Fecha formateada.
+ */
+function formatDateTime(datetime) {
+  return Utilities.formatDate(new Date(datetime), "GMT-4", "dd/MM/yyyy HH:mm");
+}
+
+
+

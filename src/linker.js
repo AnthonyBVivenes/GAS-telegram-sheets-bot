@@ -3,10 +3,7 @@
  * Use this file to manually trigger the webhook connection.
  */
 
-// Reemplaza con tus tokens
 
-var BOT_TOKEN = "TokenBot";
-var WEB_APP_URL = "UrlScript";
 
 /**
  * Run this function manually in the Apps Script editor 

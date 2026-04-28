@@ -36,13 +36,27 @@ function postToTelegram(token, method, payload) {
  * @param {string|number} searchValue - Value to search for
  * @returns {number} Row index (1-based) or -1 if not found
  */
-function findRowByValue(ssId, sheetName, columnIndex, searchValue) {
-  var sheet = SpreadsheetApp.openById(ssId).getSheetByName(sheetName);
+function findRowByValue(spreadsheetId, sheetName, columnNumber, value) {
+  var ss = SpreadsheetApp.openById(spreadsheetId);
+  var sheet = ss.getSheetByName(sheetName);
+  if (!sheet) return -1;
+  
   var data = sheet.getDataRange().getValues();
+  var searchValue = value ? value.toString().trim() : "";
+
   for (var i = 1; i < data.length; i++) {
-    if (data[i][columnIndex] == searchValue) return i + 1;
+    var row = data[i];
+    if (row && row.length >= columnNumber) {
+      var cellValue = row[columnNumber - 1];
+      
+      var cellString = (cellValue !== null && cellValue !== undefined) ? cellValue.toString().trim() : "";
+      
+      if (cellString === searchValue) {
+        return i + 1;
+      }
+    }
   }
-  return -1;
+  return -1; 
 }
 
 /**

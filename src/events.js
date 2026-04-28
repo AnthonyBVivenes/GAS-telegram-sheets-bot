@@ -9,9 +9,13 @@
 function createEvent(name, datetime, desc, visibility) {
   try {
     var eventId = generateAutoId(SHEET_EVENTS, 0);
-    var data = [eventId, name, datetime, desc, visibility, new Date()];
+    var data = [eventId, name, date, desc, visibility, new Date()];
     
+
     var success = insertRow(SPREADSHEET_ID, SHEET_EVENTS, data);
+
+    createScheduledAlert(eventId, new Date(date), "Recordatorio: El evento " + name + " comienza ahora.");
+
     return { success: success, message: success ? "Event created" : "Insert failed", eventId: eventId };
   } catch (e) {
     return { success: false, message: e.toString() };
@@ -130,3 +134,30 @@ function getEventSubscribers(eventId) {
 
 
 
+/**
+ * Sends a message to all users subscribed to a specific event.
+ * Location: events.js
+ */
+function broadcastToEvent(eventId, messageText) {
+  try {
+    var subscribers = getEventSubscribers(eventId);
+    var sentCount = 0;
+
+    if (subscribers.length === 0) {
+      return { success: false, message: "No hay suscriptores en este evento." };
+    }
+
+    for (var i = 0; i < subscribers.length; i++) {
+      postToTelegram(BOT_TOKEN, "sendMessage", {
+        chat_id: subscribers[i],
+        text: "*ANUNCIO DEL EVENTO:*\n\n" + messageText,
+        parse_mode: "Markdown"
+      });
+      sentCount++;
+    }
+    return { success: true, totalSent: sentCount };
+  } catch (e) {
+    writeLog(SPREADSHEET_ID, "EVENT_BROADCAST_ERROR", e.toString());
+    return { success: false, message: e.toString() };
+  }
+}
